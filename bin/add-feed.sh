@@ -1,45 +1,61 @@
-podcast_id=$1
-base_directory="../feeds"
+#!/bin/bash
 
-cd "$base_directory" || exit
+PODCAST_ID=$1
+BASE_DIRECTORY="../feeds"
 
-if [ ! -d "$podcast_id" ]; then
-    mkdir "$podcast_id"
+cd "$BASE_DIRECTORY" || exit
+
+if [ ! -d "$PODCAST_ID" ]; then
+    mkdir "$PODCAST_ID"
 fi
 
-temp_file="$podcast_id/temp.html"
-response=$(curl -s -w '%{http_code}' -o "$temp_file" "https://smotrim.ru/podcast/$podcast_id")
-status=$(echo $response | awk '{print $NF}')
+TEMP_FILE="$PODCAST_ID/temp.html"
+RESPONSE=$(curl -s -w '%{http_code}' -o "$TEMP_FILE" "https://smotrim.ru/podcast/$PODCAST_ID")
+STATUS=$(echo $RESPONSE | awk '{print $NF}')
 
-if [ "$status" -ne 200 ]; then
-    echo "Error: server responded with status $status"
-    rm -rf "./$podcast_id"
+if [ "$STATUS" -ne 200 ]; then
+    echo "Error: server responded with status $STATUS"
+    rm -rf "./$PODCAST_ID"
     exit 1
 fi
 
-html=$(<"$temp_file")
-rm "$temp_file"
+HTML=$(<"$TEMP_FILE")
+rm "$TEMP_FILE"
 
-title=$(echo "$html" | grep -oP '(?<=<title>).*?(?=</title>)')
-link=$(echo "$html" | grep -oP '(?<=<meta property="canonical" content=").+?(?=")')
-description=$(echo "$html" | grep -oP '(?<=<meta name="description" content=").+?(?=")')
-image=$(echo "$html" | grep -oP '(?<=<meta property="og:image" content=").+?(?=")')
+METADATA_FILE="../bin/mapping.txt"
+TEMP_HTML_FILE="$PODCAST_ID/temp_html.html"
 
-header_file="$podcast_id/header_$podcast_id.xml"
-rss_file="$podcast_id/rss_$podcast_id.xml"
+echo $HTML > "$TEMP_HTML_FILE"
 
-cat <<EOF > "$header_file"
+API_RESPONSE=$(curl -s -X 'POST' \
+  'https://api.d2d.work/document/process' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: multipart/form-data' \
+  -F "document=@$TEMP_HTML_FILE" \
+  -F "metadata=@$METADATA_FILE")
+
+rm "$TEMP_HTML_FILE"
+
+TITLE=$(echo "$API_RESPONSE" | jq -r '.result.title')
+LINK=$(echo "$API_RESPONSE" | jq -r '.result.link')
+DESCRIPTION=$(echo "$API_RESPONSE" | jq -r '.result.description')
+IMAGE=$(echo "$API_RESPONSE" | jq -r '.result.image')
+
+HEADER_FILE="$PODCAST_ID/header_$PODCAST_ID.xml"
+RSS_FILE="$PODCAST_ID/rss_$PODCAST_ID.xml"
+
+cat <<EOF > "$HEADER_FILE"
 <rss version="2.0">
     <channel>
-        <title>$title</title>
-        <link>$link</link>
+        <title>$TITLE</title>
+        <link>$LINK</link>
         <language>ru</language>
-        <description>$description</description>
+        <description>$DESCRIPTION</description>
         <image>
-            <url>$image</url>
+            <url>$IMAGE</url>
         </image>
     </channel>
 </rss>
 EOF
 
-cp "$header_file" "$rss_file"
+cp "$HEADER_FILE" "$RSS_FILE"

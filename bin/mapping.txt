@@ -1,0 +1,31 @@
+{
+  "name": "smotrim-rss-mapping",
+  "version": "0.1",
+  "documentType": "text/html",
+  "mapping": {
+    "type": "object",
+    "query": "/html",
+    "mapping": {
+      "title": {
+        "type": "value",
+        "query": "./head/title/text()",
+        "postprocessing": null
+      },
+      "description": {
+        "type": "value",
+        "query": "./head/meta[@name='description']/@content",
+        "postprocessing": null
+      },
+      "image": {
+        "type": "value",
+        "query": "./head/meta[@name='og:image']/@content",
+        "postprocessing": null
+      },
+      "link": {
+        "type": "value",
+        "query": "./head/meta[@name='canonical']/@content",
+        "postprocessing": null
+      }
+    }
+  }
+}
