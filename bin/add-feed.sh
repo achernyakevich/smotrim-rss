@@ -1,58 +1,54 @@
 #!/bin/bash
 
 PODCAST_ID=$1
-BASE_DIRECTORY="../feeds"
 
-cd "$BASE_DIRECTORY" || exit
-
-if [ ! -d "$PODCAST_ID" ]; then
-    mkdir "$PODCAST_ID"
-fi
-
-TEMP_FILE="$PODCAST_ID/temp.html"
-RESPONSE=$(curl -s -w '%{http_code}' -o "$TEMP_FILE" "https://smotrim.ru/podcast/$PODCAST_ID")
-STATUS=$(echo $RESPONSE | awk '{print $NF}')
-
-if [ "$STATUS" -ne 200 ]; then
-    echo "Error: server responded with status $STATUS"
-    rm -rf "./$PODCAST_ID"
+if [ "$#" -ne 1 ] || ! [[ "$PODCAST_ID" =~ ^[0-9]+$ ]]; then
+    echo "Error: wrong podcast id format"
     exit 1
 fi
 
-HTML=$(<"$TEMP_FILE")
-rm "$TEMP_FILE"
+BASE_DIR="../feeds"
+MAPPING_PATH="../bin/mapping.json"
+HEADER_FILE="$BASE_DIR/$PODCAST_ID/header_$PODCAST_ID.xml"
+RSS_FILE="$BASE_DIR/$PODCAST_ID/rss_$PODCAST_ID.xml"
 
-METADATA_FILE="../bin/mapping.txt"
-TEMP_HTML_FILE="$PODCAST_ID/temp_html.html"
+cd "$BASE_DIR" || exit
 
-echo $HTML > "$TEMP_HTML_FILE"
+if [ -d "$PODCAST_ID" ]; then
+    echo "Error: directory '$PODCAST_ID' already exists. Check podcast id or remove this directory"
+    exit 3
+fi
+
+mkdir "$PODCAST_ID"
+
+PODCAST_PATH="../tmp/podcast.html"
+RESPONSE=$(curl -s -w '%{http_code}' -o "$PODCAST_PATH" "https://smotrim.ru/podcast/$PODCAST_ID")
+STATUS=$(echo $RESPONSE | awk '{print $NF}')
+
+if [ "$STATUS" -ne 200 ]; then
+    echo "Error: can\`t download podcast with id $PODCAST_ID"
+    rm -rf "./$PODCAST_ID"
+    exit 1
+fi
 
 API_RESPONSE=$(curl -s -X 'POST' \
   'https://api.d2d.work/document/process' \
   -H 'accept: application/json' \
   -H 'Content-Type: multipart/form-data' \
-  -F "document=@$TEMP_HTML_FILE" \
-  -F "metadata=@$METADATA_FILE")
+  -F "document=@$PODCAST_PATH" \
+  -F "metadata=@$MAPPING_PATH")
 
-rm "$TEMP_HTML_FILE"
-
-TITLE=$(echo "$API_RESPONSE" | jq -r '.result.title')
-LINK=$(echo "$API_RESPONSE" | jq -r '.result.link')
-DESCRIPTION=$(echo "$API_RESPONSE" | jq -r '.result.description')
-IMAGE=$(echo "$API_RESPONSE" | jq -r '.result.image')
-
-HEADER_FILE="$PODCAST_ID/header_$PODCAST_ID.xml"
-RSS_FILE="$PODCAST_ID/rss_$PODCAST_ID.xml"
+rm "$PODCAST_PATH"
 
 cat <<EOF > "$HEADER_FILE"
 <rss version="2.0">
     <channel>
-        <title>$TITLE</title>
-        <link>$LINK</link>
+        <title>$(echo "$API_RESPONSE" | jq -r '.result.title')</title>
+        <link>$(echo "$API_RESPONSE" | jq -r '.result.link')</link>
         <language>ru</language>
-        <description>$DESCRIPTION</description>
+        <description>$(echo "$API_RESPONSE" | jq -r '.result.description')</description>
         <image>
-            <url>$IMAGE</url>
+            <url>$(echo "$API_RESPONSE" | jq -r '.result.image')</url>
         </image>
     </channel>
 </rss>
