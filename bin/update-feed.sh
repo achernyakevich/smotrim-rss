@@ -1,35 +1,33 @@
-podcast_id=$1
-rss_file="..feeds/$podcast_id/rss_$podcast_id.xml"
+PODCAST_ID=$1
+RSS_FILE="../feeds/$PODCAST_ID/rss_$PODCAST_ID.xml"
 
-json=$(curl -s "https://smotrim.ru/api/audios?page=1&limit=1000&rubricId=$podcast_id")
+JSON=$(curl -s "https://smotrim.ru/api/audios?page=1&limit=1000&rubricId=$PODCAST_ID")
 
-sed -i '/<\/channel>/d' "$rss_file"
-sed -i '/<\/rss>/d' "$rss_file"
+sed -i '/<\/channel>/d' "$RSS_FILE"
+sed -i '/<\/rss>/d' "$RSS_FILE"
 
-echo "$json" | jq -c '.contents[0].list[]' | while read -r item; do
-    title=$(echo $item | jq -r '.anons')
-    description=$(echo $item | jq -r '.description')
-    link="https://smotrim.ru/audio/$(echo $item | jq -r '.id')"
-    published=$(echo $item | jq -r '.published')
-    duration=$(echo $item | jq -r '.duration')
-    image=$(echo $item | jq -r '.preview.source.small')
-    enclosure="https://vgtrk-podcast.cdnvideo.ru/audio/listen?id=$(echo $item | jq -r '.id')"
+echo "$JSON" | jq -c '.contents[0].list[]' | while read -r ITEM; do
+    TITLE=$(echo $ITEM | jq -r '.anons')
+    DESCRIPTION=$(echo $ITEM | jq -r '.description')
+    LINK="https://smotrim.ru/audio/$(echo $ITEM | jq -r '.id')"
+    PUBLISHED=$(echo $ITEM | jq -r '.published')
+    DURATION=$(echo $ITEM | jq -r '.duration')
+    IMAGE=$(echo $ITEM | jq -r '.preview.source.small')
+    ENCLOSURE="https://vgtrk-podcast.cdnvideo.ru/audio/listen?id=$(echo $ITEM | jq -r '.id')"
 
-    pubDate=$(./convert-date.sh "$published")
+    PUBDATE=$(./convert-date.sh "$PUBLISHED")
 
-    cat <<EOF >> "$rss_file"
+    cat <<EOF >> "$RSS_FILE"
     <item>
-        <title>$title</title>
-        <description><![CDATA[<img src="$image" alt="Image description"><br>$description]]></description>
-        <link>$link</link>
-        <pubDate>$pubDate</pubDate>
-        <duration>$duration</duration>
-        <enclosure url="$enclosure" type="audio/mpeg"/>
+        <title>$TITLE</title>
+        <description><![CDATA[<img src="$IMAGE" alt="Image description"><br>$DESCRIPTION]]></description>
+        <link>$LINK</link>
+        <pubDate>$PUBDATE</pubDate>
+        <duration>$DURATION</duration>
+        <enclosure url="$ENCLOSURE" type="audio/mpeg"/>
     </item>
 EOF
 done
 
-echo '    </channel>' >> "$rss_file"
-echo '</rss>' >> "$rss_file"
-
-cat "$rss_file"
+echo '    </channel>' >> "$RSS_FILE"
+echo '</rss>' >> "$RSS_FILE"
