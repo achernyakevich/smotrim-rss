@@ -6,36 +6,31 @@
     "type": "object",
     "query": "/html/head",
     "mapping": {
-      "rss": {
+      "channel": {
         "type": "object",
         "mapping": {
-          "channel": {
+          "title": {
+            "type": "value",
+            "query": "./title/text()"
+          },
+          "link": {
+            "type": "value",
+            "query": "./meta[@name='canonical']/@content"
+          },
+          "language": {
+            "type": "constant",
+            "value": "ru"
+          },
+          "description": {
+            "type": "value",
+            "query": "./meta[@name='description']/@content"
+          },
+          "image": {
             "type": "object",
             "mapping": {
-              "title": {
+              "url": {
                 "type": "value",
-                "query": "./title/text()"
-              },
-              "link": {
-                "type": "value",
-                "query": "./meta[@name='canonical']/@content"
-              },
-              "language": {
-                "type": "constant",
-                "value": "ru"
-              },
-              "description": {
-                "type": "value",
-                "query": "./meta[@name='description']/@content"
-              },
-              "image": {
-                "type": "object",
-                "mapping": {
-                  "url": {
-                    "type": "value",
-                    "query": "./meta[@name='og:image']/@content"
-                  }
-                }
+                "query": "./meta[@name='og:image']/@content"
               }
             }
           }
