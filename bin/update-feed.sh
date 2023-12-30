@@ -1,4 +1,31 @@
+#!/bin/bash
+
 PODCAST_ID=$1
+SCRIPT_FLAGS=$2
+
+FEEDS_BASE_DIR="./feeds"
+PODCAST_FEED_DIR="$FEEDS_BASE_DIR/$PODCAST_ID"
+PODCAST_HEADER_PATH="$PODCAST_FEED_DIR/rss-$PODCAST_ID.header"
+PODCAST_RSS_PATH="./tmp/rss-$PODCAST_ID.xml"
+
+if [ -z "$PODCAST_ID" ]; then
+    echo -e "Usage:\t./bin/update-feed.sh <podcast_id>"
+    echo -e "\nUpdate RSS feed for smotrim.ru podcast with <podcast_id>.\n"
+    exit 1
+else
+    if ! [[ "$PODCAST_ID" =~ ^[0-9]+$ ]]; then
+        echo "Error: wrong podcast id format (it should be number)."
+        exit 2
+    fi
+fi
+
+if ! [ -d "$PODCAST_FEED_DIR" ]; then
+    echo -e "Error:\tpodcast's feed folder does not exist ($PODCAST_FEED_DIR)."
+    echo -e "\tCheck podcast id or add RSS first (use ./bin/add-feed.sh).\n"
+    exit 3
+fi
+
+
 RSS_FILE="../feeds/$PODCAST_ID/rss_$PODCAST_ID.xml"
 
 JSON=$(curl -s "https://smotrim.ru/api/audios?page=1&limit=1000&rubricId=$PODCAST_ID")
