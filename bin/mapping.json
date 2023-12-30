@@ -1,30 +1,45 @@
 {
-  "name": "smotrim-rss-mapping",
+  "name": "HTML to RSS JSON mapping for smotrim.ru",
   "version": "0.1",
   "documentType": "text/html",
   "mapping": {
     "type": "object",
-    "query": "/html",
+    "query": "/html/head",
     "mapping": {
-      "title": {
-        "type": "value",
-        "query": "./head/title/text()",
-        "postprocessing": null
-      },
-      "description": {
-        "type": "value",
-        "query": "./head/meta[@name='description']/@content",
-        "postprocessing": null
-      },
-      "image": {
-        "type": "value",
-        "query": "./head/meta[@name='og:image']/@content",
-        "postprocessing": null
-      },
-      "link": {
-        "type": "value",
-        "query": "./head/meta[@name='canonical']/@content",
-        "postprocessing": null
+      "rss": {
+        "type": "object",
+        "mapping": {
+          "channel": {
+            "type": "object",
+            "mapping": {
+              "title": {
+                "type": "value",
+                "query": "./title/text()"
+              },
+              "link": {
+                "type": "value",
+                "query": "./meta[@name='canonical']/@content"
+              },
+              "language": {
+                "type": "constant",
+                "value": "ru"
+              },
+              "description": {
+                "type": "value",
+                "query": "./meta[@name='description']/@content"
+              },
+              "image": {
+                "type": "object",
+                "mapping": {
+                  "url": {
+                    "type": "value",
+                    "query": "./meta[@name='og:image']/@content"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
