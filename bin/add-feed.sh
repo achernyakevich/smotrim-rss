@@ -13,16 +13,18 @@ PODCAST_RSS_PATH="./tmp/rss-$PODCAST_ID.xml"
 
 if [ -z "$PODCAST_ID" ]; then
     echo -e "Usage:\t./bin/add-feed.sh <podcast_id>"
-    echo -e "\nAdd empty RSS feed for smotrim.ru podcast with <podcast_id>."
+    echo -e "\nAdd empty RSS feed for smotrim.ru podcast with <podcast_id>.\n"
+    exit 1
 else
     if ! [[ "$PODCAST_ID" =~ ^[0-9]+$ ]]; then
-        echo "Error: wrong podcast id format (it should be number)."
-        exit 1
+        echo "Error:\twrong podcast id format (it should be number).\n"
+        exit 2
     fi
 fi
 
 if [ -d "$PODCAST_FEED_DIR" ]; then
-    echo "Error: podcast's feed folder already exists ($PODCAST_FEED_DIR). Check podcast id or remove target RSS folder."
+    echo -e "Error:\tpodcast's feed folder already exists ($PODCAST_FEED_DIR)."
+    echo -e "\tCheck podcast id or remove target RSS folder.\n"
     exit 3
 fi
 
@@ -30,7 +32,7 @@ fi
 RESPONSE=$(curl -s -w '%{http_code}' -o "$PODCAST_HTML_PATH" "https://smotrim.ru/podcast/$PODCAST_ID")
 STATUS=$(echo $RESPONSE | awk '{print $NF}')
 if [ "$STATUS" -ne 200 ]; then
-    echo "Error: can't download podcast's HTML (URL: https://smotrim.ru/podcast/$PODCAST_ID, HTTP Status: $STATUS)"
+    echo "Error:\tcan't download podcast's HTML (URL: https://smotrim.ru/podcast/$PODCAST_ID, HTTP Status: $STATUS)\n"
     exit 1
 fi
 
@@ -63,6 +65,7 @@ jq -r '
 ' "$PODCAST_JSON_PATH" > "$PODCAST_HEADER_PATH"
 
 cp "$PODCAST_HEADER_PATH" "$PODCAST_RSS_PATH" && echo "</rss>" >> "$PODCAST_RSS_PATH"
+
 
 # copying final version of header and RSS to the feed's folder
 mkdir "$PODCAST_FEED_DIR"
