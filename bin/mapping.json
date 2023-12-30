@@ -1,0 +1,41 @@
+{
+  "name": "HTML to RSS JSON mapping for smotrim.ru",
+  "version": "0.1",
+  "documentType": "text/html",
+  "mapping": {
+    "type": "object",
+    "query": "/html/head",
+    "mapping": {
+      "channel": {
+        "type": "object",
+        "mapping": {
+          "title": {
+            "type": "value",
+            "query": "./title/text()"
+          },
+          "link": {
+            "type": "value",
+            "query": "./meta[@name='canonical']/@content"
+          },
+          "language": {
+            "type": "constant",
+            "value": "ru"
+          },
+          "description": {
+            "type": "value",
+            "query": "./meta[@name='description']/@content"
+          },
+          "image": {
+            "type": "object",
+            "mapping": {
+              "url": {
+                "type": "value",
+                "query": "./meta[@name='og:image']/@content"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
