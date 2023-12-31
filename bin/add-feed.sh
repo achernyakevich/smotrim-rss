@@ -63,6 +63,7 @@ jq -r '
   "<rss version=\"2.0\">" +
   (json2xml("  "))
 ' "$PODCAST_JSON_PATH" > "$PODCAST_HEADER_PATH"
+sed -i '/<\/channel>/d' "$PODCAST_HEADER_PATH"
 
 cp "$PODCAST_HEADER_PATH" "$PODCAST_RSS_PATH" && echo "</rss>" >> "$PODCAST_RSS_PATH"
 
