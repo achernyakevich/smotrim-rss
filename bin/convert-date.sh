@@ -1,6 +1,5 @@
-original_date=$1
-
-date_eng=$(echo $original_date | \
+read DATE_RU
+DATE_EN=$(echo $DATE_RU | \
            sed -e 's/января/Jan/' \
                -e 's/февраля/Feb/' \
                -e 's/марта/Mar/' \
@@ -14,6 +13,4 @@ date_eng=$(echo $original_date | \
                -e 's/ноября/Nov/' \
                -e 's/декабря/Dec/')
 
-formatted_date=$(date -d "$date_eng" -u +"%a, %d %b %Y %H:%M:%S GMT")
-
-echo $formatted_date
+date -d "$DATE_EN" -u +"%a, %d %b %Y %H:%M:%S GMT"
