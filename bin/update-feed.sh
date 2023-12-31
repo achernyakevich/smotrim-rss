@@ -59,7 +59,7 @@ cat "$PODCAST_JSON_PATH" | jq -c '.contents[0].list[]' | while read -r ITEM; do
       <enclosure url="$ITEM_ENCLOSURE" type="audio/mpeg"/>
       <itunes:title>$ITEM_TITLE</itunes:title>
       <itunes:summary>
-        $ITEM_DESCRIPTION
+        <![CDATA[$ITEM_DESCRIPTION]]>
       </itunes:summary>
       <itunes:duration>$ITEM_DURATION</itunes:duration>
       <itunes:image href="$ITEM_IMAGE"/>
