@@ -65,7 +65,7 @@ jq -r '
 ' "$PODCAST_JSON_PATH" > "$PODCAST_HEADER_PATH"
 sed -i '/<\/channel>/d' "$PODCAST_HEADER_PATH"
 
-cp "$PODCAST_HEADER_PATH" "$PODCAST_RSS_PATH" && echo "</rss>" >> "$PODCAST_RSS_PATH"
+cp "$PODCAST_HEADER_PATH" "$PODCAST_RSS_PATH" && echo -e "  </channel>\n</rss>" >> "$PODCAST_RSS_PATH"
 
 
 # copying final version of header and RSS to the feed's folder
