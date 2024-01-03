@@ -28,8 +28,6 @@ if [ -d "$PODCAST_FEED_DIR" ]; then
     exit 3
 fi
 
-mkdir "./tmp/$PODCAST_ID"
-
 RESPONSE=$(curl -s -w '%{http_code}' -o "$PODCAST_HTML_PATH" "https://smotrim.ru/podcast/$PODCAST_ID")
 STATUS=$(echo $RESPONSE | awk '{print $NF}')
 if [ "$STATUS" -ne 200 ]; then
@@ -83,7 +81,7 @@ fi
 
 # Add to VCS and commit feed's folder
 if [[ $SCRIPT_FLAGS =~ "COMMIT" ]]; then
-    echo "Adding podcast feed updates to VCS..."
+    echo "Adding podcast feed header to VCS..."
     git -C "$FEEDS_BASE_DIR" add "$PODCAST_ID"
     
     if git -C "$FEEDS_BASE_DIR" diff --staged --quiet; then
