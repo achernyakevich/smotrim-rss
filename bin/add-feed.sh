@@ -28,6 +28,7 @@ if [ -d "$PODCAST_FEED_DIR" ]; then
     exit 3
 fi
 
+
 RESPONSE=$(curl -s -w '%{http_code}' -o "$PODCAST_HTML_PATH" "https://smotrim.ru/podcast/$PODCAST_ID")
 STATUS=$(echo $RESPONSE | awk '{print $NF}')
 if [ "$STATUS" -ne 200 ]; then
