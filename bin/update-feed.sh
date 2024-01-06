@@ -18,7 +18,7 @@ if [ -z "$PODCAST_ID" ]; then
     exit 1
 else
     if ! [[ "$PODCAST_ID" =~ ^[0-9]+$ ]]; then
-        echo "Error:\twrong podcast id format (it should be number).\n"
+        echo -e "Error:\twrong podcast id format (it should be number).\n"
         exit 2
     fi
 fi
