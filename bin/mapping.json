@@ -30,7 +30,7 @@
             "mapping": {
               "url": {
                 "type": "value",
-                "query": "./meta[@name='og:image']/@content"
+                "query": "/html/body/img[@alt='Картинка']/@src"
               }
             }
           }
