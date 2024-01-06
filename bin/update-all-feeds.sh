@@ -21,3 +21,9 @@ for PODCAST_DIR in "$FEEDS_BASE_DIR"/*; do
 done
 
 echo "All feeds updated."
+
+# Show diff between old and new state of feed's folder (git diff based)
+if [[ $SCRIPT_FLAGS =~ "SHOWDIFF" ]]; then
+    echo -e "Actual changes are:\n"
+    git --no-pager diff ./feeds/
+fi
