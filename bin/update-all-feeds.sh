@@ -12,10 +12,10 @@ for PODCAST_DIR in "$FEEDS_BASE_DIR"/*; do
     if [ -d "$PODCAST_DIR" ]; then
         PODCAST_ID=$(basename "$PODCAST_DIR")
         if ! [[ "$PODCAST_ID" =~ ^[0-9]+$ ]]; then
-            echo "Error: Podcast ID '$PODCAST_ID' is not a valid number."
+            echo "Error: '$PODCAST_ID' looks as invalid Podcast ID (should be a number)."
             continue
         fi
-        echo "Updating feed for podcast ID: $PODCAST_ID"
+        echo "Updating RSS feed for Podcast ID $PODCAST_ID."
         ./bin/update-feed.sh "$PODCAST_ID" "$SCRIPT_FLAGS"
     fi
 done
