@@ -17,7 +17,7 @@ if [ -z "$PODCAST_ID" ]; then
     exit 1
 else
     if ! [[ "$PODCAST_ID" =~ ^[0-9]+$ ]]; then
-        echo "Error:\twrong podcast id format (it should be number).\n"
+        echo -e "Error:\twrong podcast id format (it should be number).\n"
         exit 2
     fi
 fi
@@ -32,7 +32,7 @@ fi
 RESPONSE=$(curl -s -w '%{http_code}' -o "$PODCAST_HTML_PATH" "https://smotrim.ru/podcast/$PODCAST_ID")
 STATUS=$(echo $RESPONSE | awk '{print $NF}')
 if [ "$STATUS" -ne 200 ]; then
-    echo "Error:\tcan't download podcast's HTML (URL: https://smotrim.ru/podcast/$PODCAST_ID, HTTP Status: $STATUS)\n"
+    echo -e "Error:\tcan't download podcast's HTML (URL: https://smotrim.ru/podcast/$PODCAST_ID, HTTP Status: $STATUS)\n"
     exit 1
 fi
 
