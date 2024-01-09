@@ -20,7 +20,7 @@ GENERATE_HTML() {
 
             for SUBFILE in "$FILE"/*; do
                 if [ -f "$SUBFILE" ]; then
-                    echo "                <li><a href='feeds/$BASE_NAME/$(basename "$SUBFILE")'>$(basename "$SUBFILE")</a></li>" >> $FEEDS_HTML_PATH
+                    echo "                <li><a href='$BASE_NAME/$(basename "$SUBFILE")'>$(basename "$SUBFILE")</a></li>" >> $FEEDS_HTML_PATH
                 fi
             done
 
