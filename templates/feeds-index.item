@@ -1,0 +1,11 @@
+      <div class="row mb-4">
+        <div class="col-md-2 d-flex justify-content-center">
+          <img src="{IMAGE_URL}" alt="{TITLE}" class="img-fluid" />
+        </div>
+        <div class="col-md-10">
+          <h5>
+            <a href="{FEED_ID}/rss-{FEED_ID}.xml" class="stretched-link">{TITLE}</a>
+          </h5>
+          <p>{DESCRIPTION}</p>
+        </div>
+      </div>
