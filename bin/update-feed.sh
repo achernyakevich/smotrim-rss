@@ -43,9 +43,7 @@ cat "$PODCAST_JSON_PATH" | jq -c '.contents[0].list[]' | while read -r ITEM; do
     ITEM_IMAGE=$(echo $ITEM | jq -r '.preview.source.main')
     ITEM_ENCLOSURE="https://vgtrk-podcast.cdnvideo.ru/audio/listen?id=$(echo $ITEM | jq -r '.id')"
 
-    # PUBLISHED=$(echo $ITEM | jq -r '.published')
-    # ITEM_PUBLICATION_DATE=$(./bin/convert-date.sh "$PUBLISHED")
-    ITEM_PUBLICATION_DATE=$(echo $ITEM | jq -r '.published' | ./bin/convert-date.sh)
+    ITEM_PUBLICATION_DATE=$(echo $ITEM | jq -r '.published' | ./bin/utils/convert-date.sh)
 
     cat <<EOF >> "$PODCAST_RSS_PATH"
     <item>

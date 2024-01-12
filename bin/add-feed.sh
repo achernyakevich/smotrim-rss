@@ -3,7 +3,7 @@
 PODCAST_ID=$1
 SCRIPT_FLAGS=$2
 
-MAPPING_PATH="./bin/mapping.json"
+MAPPING_PATH="./bin/utils/mapping.json"
 FEEDS_BASE_DIR="./feeds"
 PODCAST_FEED_DIR="$FEEDS_BASE_DIR/$PODCAST_ID"
 PODCAST_HTML_PATH="./tmp/podcast-$PODCAST_ID.html"

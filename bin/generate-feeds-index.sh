@@ -8,7 +8,7 @@ FEEDS_HTML_PATH="./feeds/index.html"
 
 cat "$TEMPLATE_HEADER_PATH" > "$FEEDS_HTML_PATH"
 
-./bin/list-feeds-as-json.sh | jq -c '.[]' | while read -r FEED; do
+./bin/utils/list-feeds-as-json.sh | jq -c '.[]' | while read -r FEED; do
     FEED_ID=$(echo "$FEED" | jq -r '.id')
     TITLE=$(echo "$FEED" | jq -r '.title')
     DESCRIPTION=$(echo "$FEED" | jq -r '.description')
