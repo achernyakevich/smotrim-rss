@@ -1,0 +1,12 @@
+    <item>
+      <title>{TITLE}</title>
+      <description><![CDATA[{DESCRIPTION}]]></description>
+      <link>https://smotrim.ru/audio/{ITEM_ID}/</link>
+      <guid isPermaLink="true">https://vgtrk-podcast.cdnvideo.ru/audio/listen?id={ITEM_ID}</guid>
+      <pubDate>{PUBLICATION_DATE}</pubDate>
+      <enclosure url="{ENCLOSURE}" type="audio/mpeg"/>
+      <itunes:title>{TITLE}</itunes:title>
+      <itunes:summary><![CDATA[{DESCRIPTION}]]></itunes:summary>
+      <itunes:duration>{DURATION}</itunes:duration>
+      <itunes:image href="{IMAGE_URL}"/>
+    </item>
