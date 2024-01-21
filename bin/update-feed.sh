@@ -8,6 +8,7 @@ PODCAST_FEED_DIR="$FEEDS_BASE_DIR/$PODCAST_ID"
 PODCAST_HEADER_PATH="$PODCAST_FEED_DIR/rss-$PODCAST_ID.header"
 PODCAST_RSS_PATH="./tmp/rss-$PODCAST_ID.xml"
 PODCAST_JSON_PATH="./tmp/items-$PODCAST_ID.json"
+TEMPLATE_ITEM_PATH="./templates/feed.item"
 
 PODCAST_API_PAGE_SIZE="1000"
 PODCAST_API_URL="https://smotrim.ru/api/audios?page=1&limit=$PODCAST_API_PAGE_SIZE&rubricId=$PODCAST_ID"
@@ -35,34 +36,24 @@ cp $PODCAST_HEADER_PATH $PODCAST_RSS_PATH
 echo "Getting podcast JSON from $PODCAST_API_URL (last $PODCAST_API_PAGE_SIZE items)."
 curl -s "$PODCAST_API_URL" > "$PODCAST_JSON_PATH"
 
-cat "$PODCAST_JSON_PATH" | jq -c '.contents[0].list[]' | while read -r ITEM; do
-    ITEM_ID="$(echo $ITEM | jq -r '.id')"
-    ITEM_TITLE=$(echo $ITEM | jq -r '.anons')
-    ITEM_DESCRIPTION=$(echo $ITEM | jq -r '.description')
-    ITEM_DURATION=$(echo $ITEM | jq -r '.duration')
-    ITEM_IMAGE=$(echo $ITEM | jq -r '.preview.source.main')
-    ITEM_ENCLOSURE="https://vgtrk-podcast.cdnvideo.ru/audio/listen?id=$(echo $ITEM | jq -r '.id')"
-
-    ITEM_PUBLICATION_DATE=$(echo $ITEM | jq -r '.published' | ./bin/utils/convert-date.sh)
-
-    cat <<EOF >> "$PODCAST_RSS_PATH"
-    <item>
-      <title>$ITEM_TITLE</title>
-      <description>
-        <![CDATA[$ITEM_DESCRIPTION]]>
-      </description>
-      <link>https://radiomayak.ru/shows/episode/id/$ITEM_ID/</link>
-      <guid isPermaLink="true">$ITEM_ENCLOSURE</guid>
-      <pubDate>$ITEM_PUBLICATION_DATE</pubDate>
-      <enclosure url="$ITEM_ENCLOSURE" type="audio/mpeg"/>
-      <itunes:title>$ITEM_TITLE</itunes:title>
-      <itunes:summary>
-        <![CDATA[$ITEM_DESCRIPTION]]>
-      </itunes:summary>
-      <itunes:duration>$ITEM_DURATION</itunes:duration>
-      <itunes:image href="$ITEM_IMAGE"/>
-    </item>
-EOF
+jq -r '.contents[0].list[] | 
+      [.id, .anons, .description, .duration, .preview.source.main, 
+      ("https://vgtrk-podcast.cdnvideo.ru/audio/listen?id=" + (.id|tostring)), 
+      .published] | 
+      @tsv' "$PODCAST_JSON_PATH" |
+while IFS=$'\t' read -r ITEM_ID ITEM_TITLE ITEM_DESCRIPTION ITEM_DURATION \
+                        ITEM_IMAGE ITEM_ENCLOSURE \
+                        ITEM_PUBLICATION_DATE; do
+    ITEM_PUBLICATION_DATE=$(echo "$ITEM_PUBLICATION_DATE" | ./bin/utils/convert-date.sh)
+    awk -v itemId="$ITEM_ID" -v title="$ITEM_TITLE" -v description="$ITEM_DESCRIPTION" \
+        -v duration="$ITEM_DURATION" -v imageUrl="$ITEM_IMAGE" \
+        -v enclosure="$ITEM_ENCLOSURE" -v publicationDate="$ITEM_PUBLICATION_DATE" \
+        '{
+            gsub(/{ITEM_ID}/, itemId); gsub(/{TITLE}/, title); gsub(/{DESCRIPTION}/, description);
+            gsub(/{DURATION}/, duration); gsub(/{IMAGE_URL}/, imageUrl);
+            gsub(/{ENCLOSURE}/, enclosure); gsub(/{PUBLICATION_DATE}/, publicationDate);
+            print;
+        }' "$TEMPLATE_ITEM_PATH" >> "$PODCAST_RSS_PATH"
 done
 
 cat <<EOF >> "$PODCAST_RSS_PATH"
