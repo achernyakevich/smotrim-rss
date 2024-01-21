@@ -8,7 +8,7 @@ PODCAST_FEED_DIR="$FEEDS_BASE_DIR/$PODCAST_ID"
 PODCAST_HEADER_PATH="$PODCAST_FEED_DIR/rss-$PODCAST_ID.header"
 PODCAST_RSS_PATH="./tmp/rss-$PODCAST_ID.xml"
 PODCAST_JSON_PATH="./tmp/items-$PODCAST_ID.json"
-ITEM_TEMPLATE_PATH="./templates/feed.item"
+TEMPLATE_ITEM_PATH="./templates/feed.item"
 
 PODCAST_API_PAGE_SIZE="1000"
 PODCAST_API_URL="https://smotrim.ru/api/audios?page=1&limit=$PODCAST_API_PAGE_SIZE&rubricId=$PODCAST_ID"
@@ -41,25 +41,19 @@ jq -r '.contents[0].list[] |
       ("https://vgtrk-podcast.cdnvideo.ru/audio/listen?id=" + (.id|tostring)), 
       .published] | 
       @tsv' "$PODCAST_JSON_PATH" |
-while IFS=$'\t' read -r ITEM_ID ITEM_TITLE ITEM_DESCRIPTION ITEM_DURATION ITEM_IMAGE ITEM_ENCLOSURE ITEM_PUBLICATION_DATE; do
+while IFS=$'\t' read -r ITEM_ID ITEM_TITLE ITEM_DESCRIPTION ITEM_DURATION \
+                        ITEM_IMAGE ITEM_ENCLOSURE \
+                        ITEM_PUBLICATION_DATE; do
     ITEM_PUBLICATION_DATE=$(echo "$ITEM_PUBLICATION_DATE" | ./bin/utils/convert-date.sh)
-    awk -v title="$ITEM_TITLE" \
-        -v description="$ITEM_DESCRIPTION" \
-        -v itemId="$ITEM_ID" \
-        -v publicationDate="$ITEM_PUBLICATION_DATE" \
-        -v enclosure="$ITEM_ENCLOSURE" \
-        -v duration="$ITEM_DURATION" \
-        -v imageUrl="$ITEM_IMAGE" \
+    awk -v itemId="$ITEM_ID" -v title="$ITEM_TITLE" -v description="$ITEM_DESCRIPTION" \
+        -v duration="$ITEM_DURATION" -v imageUrl="$ITEM_IMAGE" \
+        -v enclosure="$ITEM_ENCLOSURE" -v publicationDate="$ITEM_PUBLICATION_DATE" \
         '{
-            gsub(/{TITLE}/, title);
-            gsub(/{DESCRIPTION}/, description);
-            gsub(/{ITEM_ID}/, itemId);
-            gsub(/{PUBLICATION_DATE}/, publicationDate);
-            gsub(/{ENCLOSURE}/, enclosure);
-            gsub(/{DURATION}/, duration);
-            gsub(/{IMAGE_URL}/, imageUrl);
+            gsub(/{ITEM_ID}/, itemId); gsub(/{TITLE}/, title); gsub(/{DESCRIPTION}/, description);
+            gsub(/{DURATION}/, duration); gsub(/{IMAGE_URL}/, imageUrl);
+            gsub(/{ENCLOSURE}/, enclosure); gsub(/{PUBLICATION_DATE}/, publicationDate);
             print;
-        }' "$ITEM_TEMPLATE_PATH" >> "$PODCAST_RSS_PATH"
+        }' "$TEMPLATE_ITEM_PATH" >> "$PODCAST_RSS_PATH"
 done
 
 cat <<EOF >> "$PODCAST_RSS_PATH"
