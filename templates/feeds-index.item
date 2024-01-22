@@ -1,7 +1,7 @@
       <div class="row mb-4">
         <div class="col-md-2 d-flex justify-content-center align-items-center">
-          <a href="https://smotrim.ru/podcast/{FEED_ID}" target="_blank" style="width: 104px; height: 104px;">
-            <img src="{IMAGE_URL}" alt="{TITLE}" class="img-fluid" style="width: 104px; height: 104px;" />
+          <a href="https://smotrim.ru/podcast/{FEED_ID}" target="_blank">
+            <img src="{IMAGE_URL}" alt="{TITLE}" class="img-fluid" width="104px" height="104px"/>
           </a>
         </div>
         <div class="col-md-10">
