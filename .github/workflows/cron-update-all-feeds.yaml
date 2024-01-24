@@ -1,0 +1,24 @@
+name: Scheduled feed update
+
+on:
+  schedule:
+    - cron:  '1 0 * * *'
+
+jobs:
+  execute-and-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Run the script
+      run: bash ./bin/update-all-feeds.sh
+
+    - name: Commit and push if changes
+      run: |
+        git config --global user.name 'Kiril Rumyantsev'
+        git config --global user.email 'rumyantsev@scand.com'
+        git add .
+        git commit -m "Automated update from script" || exit 0
+        git push
