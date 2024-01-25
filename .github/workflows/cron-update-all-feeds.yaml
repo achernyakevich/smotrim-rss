@@ -2,7 +2,7 @@ name: Scheduled feed update
 
 on:
   schedule:
-    - cron:  '1 0 * * *'
+    - cron:  '0 6 * * *'
 
 jobs:
   execute-and-commit:
