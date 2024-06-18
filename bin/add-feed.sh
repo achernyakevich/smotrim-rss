@@ -82,5 +82,16 @@ fi
 
 # Add to VCS and commit feed's folder
 if [[ $SCRIPT_FLAGS =~ "COMMIT" ]]; then
-    echo TODO
+    echo "Adding podcast feed header to VCS..."
+    git -C "$FEEDS_BASE_DIR" add "$PODCAST_ID"
+
+    if git -C "$FEEDS_BASE_DIR" diff --staged --quiet; then
+        echo "No changes to commit for podcast $PODCAST_ID."
+    else
+        CURRENT_DATETIME=$(date +"%Y-%m-%d %H:%M")
+        COMMIT_MESSAGE="Added Feed: $PODCAST_ID - $CURRENT_DATETIME"
+
+        git -C "$FEEDS_BASE_DIR" commit -m "$COMMIT_MESSAGE"
+        echo "Committed changes for podcast $PODCAST_ID with message: $COMMIT_MESSAGE"
+    fi
 fi
