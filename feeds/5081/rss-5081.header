@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+  <channel>
+    <title>Врач народов</title>
+    <link></link>
+    <language>ru</language>
+    <description>Историки медицины рассказывают о лечебных практиках и знаменитых врачах разных эпох.</description>
+    <image>
+      <url>https://cdn-st3.smotrim.ru/vh/pictures/r/310/851/4.png</url>
+    </image>
