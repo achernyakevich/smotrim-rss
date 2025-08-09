@@ -188,5 +188,17 @@
       <itunes:duration>18:21</itunes:duration>
       <itunes:image href="https://cdnapi.smotrim.ru/api/v1/pictures/5192585/r/redirect"/>
     </item>
+    <item>
+      <title>Электрическое топливо</title>
+      <description><![CDATA[Как дизельное топливо может быть электрическим? Как возникла такая идея? О плюсах, минусах, проблемах и сколько может стоить литр электрического топлива рассказал Александр  Фролов, заместитель генерального директора института национальной энергетики.]]></description>
+      <link>https://smotrim.ru/audio/2695710/</link>
+      <guid isPermaLink="true">https://vgtrk-podcast.cdnvideo.ru/audio/listen?id=2695710</guid>
+      <pubDate>Tue, 25 Apr 2023 00:00:00 GMT</pubDate>
+      <enclosure url="https://vgtrk-podcast.cdnvideo.ru/audio/listen?id=2695710" type="audio/mpeg"/>
+      <itunes:title>Электрическое топливо</itunes:title>
+      <itunes:summary><![CDATA[Как дизельное топливо может быть электрическим? Как возникла такая идея? О плюсах, минусах, проблемах и сколько может стоить литр электрического топлива рассказал Александр  Фролов, заместитель генерального директора института национальной энергетики.]]></itunes:summary>
+      <itunes:duration>18:28</itunes:duration>
+      <itunes:image href="https://cdnapi.smotrim.ru/api/v1/pictures/5228588/r/redirect"/>
+    </item>
   </channel>
 </rss>
