@@ -65,7 +65,7 @@ jq -r '
   (json2xml("  "))
 ' "$PODCAST_JSON_PATH" > "$PODCAST_HEADER_PATH"
 sed -i '/<\/channel>/d' "$PODCAST_HEADER_PATH"
-sed -i 's|https://cdn-st1.smotrim.ru/vh/pictures/r/|https://cdn-st1.smotrim.ru/vh/pictures/it/|g' "$PODCAST_HEADER_PATH"
+sed -i 's|.smotrim.ru/vh/pictures/r/|.smotrim.ru/vh/pictures/it/|g' "$PODCAST_HEADER_PATH"
 
 cp "$PODCAST_HEADER_PATH" "$PODCAST_RSS_PATH" && echo -e "  </channel>\n</rss>" >> "$PODCAST_RSS_PATH"
 
