@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+  <channel>
+    <title>Меценаты</title>
+    <link></link>
+    <language>ru</language>
+    <description>Они не писали картины и не играли на сцене, но без них не было бы великих произведений, театров и музеев. Они вкладывали деньги, идеи и душу — ради искусства, ради будущего, которого могли не увидеть. Что ими двигало — тщеславие, вера в красоту или стремление к бессмертию?</description>
+    <image>
+      <url>https://cdn-st1.smotrim.ru/vh/pictures/it/635/459/2.png</url>
+    </image>
+  </channel>
+</rss>
